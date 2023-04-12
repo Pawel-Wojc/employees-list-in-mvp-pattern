@@ -1,0 +1,11 @@
+E:\Studia\Semestr 4\Programowanie obiektowe i graficzne\List\List\bin\Debug\List.exe.config
+E:\Studia\Semestr 4\Programowanie obiektowe i graficzne\List\List\bin\Debug\List.exe
+E:\Studia\Semestr 4\Programowanie obiektowe i graficzne\List\List\bin\Debug\List.pdb
+E:\Studia\Semestr 4\Programowanie obiektowe i graficzne\List\List\obj\Debug\List.csproj.AssemblyReference.cache
+E:\Studia\Semestr 4\Programowanie obiektowe i graficzne\List\List\obj\Debug\List.csproj.SuggestedBindingRedirects.cache
+E:\Studia\Semestr 4\Programowanie obiektowe i graficzne\List\List\obj\Debug\List.Properties.Resources.resources
+E:\Studia\Semestr 4\Programowanie obiektowe i graficzne\List\List\obj\Debug\List.csproj.GenerateResource.cache
+E:\Studia\Semestr 4\Programowanie obiektowe i graficzne\List\List\obj\Debug\List.csproj.CoreCompileInputs.cache
+E:\Studia\Semestr 4\Programowanie obiektowe i graficzne\List\List\obj\Debug\List.exe
+E:\Studia\Semestr 4\Programowanie obiektowe i graficzne\List\List\obj\Debug\List.pdb
+E:\Studia\Semestr 4\Programowanie obiektowe i graficzne\List\List\obj\Debug\List.View.Form1.resources
