@@ -19,7 +19,7 @@ namespace List
             Application.SetCompatibleTextRenderingDefault(false);
             
             //dopisane
-            var view = new View.Form1();
+            var view = new View.Employees();
             var model = new Models.mainModel();
             var presenter = new Presenters.mainPresenter(view, model);
 

@@ -1,86 +1,76 @@
-﻿using List.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace List.Presenters
 {
     internal class mainPresenter
     {
         
-
-        private View.Form1 _view;
+        private View.Employees _view;
         private Models.mainModel _model;
-
-
-       // List<Models.Pracownik> listaObjPracownikow = new List<Models.Pracownik>(); //lista obiektow pracowniko
-        public mainPresenter(View.Form1 view, Models.mainModel model) // kontruktor presentera
+        
+        public mainPresenter(View.Employees view, Models.mainModel model) 
         {
             _view  = view;
             _model = model;
 
-            _view.DodajPracownika += _view_DodajPracownika;
-            _view.WybierzPracownika += _view_WybierzPracownika;
-            _view.EdytujPracownika += _view_EdytujPracownika;
-            _view.ZapiszPracownika += _view_ZapiszPracownik;
-            _view.WczytajPracownika += _view_WczytajPracownika;
+            _view.AddEmployees += _view_AddEmployees;
+            _view.SelectEmployee += _view_SelectEmployee;
+            _view.EditEmployees += _view_EditEmployees;
+            _view.SaveEmployeesa += _view_SaveEmployees;
+            _view.LoadEmployees += _view_LoadEmployees;
+           
 
         }
-
-
-
-        private void _view_DodajPracownika(List<string> obj)
+        private void _view_AddEmployees(List<string> obj)
         {
-            if (_model._model_DodajPracownika(obj))
+            
+            if (_model._model_AddEmployees(obj))
             {
-                 _view.SetPracownikListBox(_model.Dane_pracowika_list()); 
+                 _view.SetEmployeeListBox(_model.DataEmployeesInList()); 
             }
             else {
                 _view.error();
-                
             }
 
         }
 
-        private void _view_WczytajPracownika() // wczytanie listy pracownikow z pliku
+        private void _view_LoadEmployees() 
         {
+            _view.clearListBox();
+            List<List<string>> list = _model._model_LoadEmployees();
 
-            _model._model_WczytajPracownika();
-            //_view.SetPracownikListBox();
-
-
+            foreach (List<string> employee in list) {
+                _view.SetEmployeeListBox(employee);
+            }     
             
         }
 
-        private void _view_ZapiszPracownik() // zapisanie listy pracownikow do pliku
+        
+
+        private void _view_SaveEmployees()
         {
-            _model._model_ZapiszPracownik();
+            _model._model_SaveEmployees();
             
         }
 
-
-
-        // uruchamiane po wybraniu ktorego elementu z listboxa,
-        // uruchamia funkcje odpowiedzialna za uzupelnienie textboxow danymi danego pracwnik
-        private void _view_WybierzPracownika(string obj)
+     
+        private void _view_SelectEmployee(string obj)
         {
-            string[] Pracownik = obj.Split(',');
-            if (Pracownik.Length >= 6) {
-                _view.SetPracownikTextBoxes(Pracownik.ToList());
+            string[] employee = obj.Split(',');
+            if (employee.Length >= 6) {
+                _view.SetPracownikTextBoxes(employee.ToList());
             }
             
         }
 
 
-        private void _view_EdytujPracownika(List<string> dane_pracownika, int index_pracownika_do_zmiany) {
-           bool zmiana = _model._model_DodajPracownika(dane_pracownika, index_pracownika_do_zmiany);
+        private void _view_EditEmployees(List<string> data_employee, int index_employee_to_change) {
+           bool zmiana = _model._model_AddEmployees(data_employee, index_employee_to_change);
 
             if (zmiana)
             {
-                _view.SetPracownikListBox(_model.Dane_pracowika_list(index_pracownika_do_zmiany), index_pracownika_do_zmiany);
+                _view.SetEmployeeListBox(_model.DataEmployeesInList(index_employee_to_change), index_employee_to_change);
             }
             else {
                 _view.error();

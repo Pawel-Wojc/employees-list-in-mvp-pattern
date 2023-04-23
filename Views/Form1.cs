@@ -11,54 +11,54 @@ using System.Windows.Forms;
 
 namespace List.View
 {
-    public partial class Form1 : Form
+    public partial class Employees : Form
     {
         private bool pracownik_edytowany;
-        int idexwybranegopracownika;
-        public event Action<List<string>> DodajPracownika; 
-        public event Action<List<string>, int> EdytujPracownika; 
-        public event Action<String> WybierzPracownika;
-        public event Action ZapiszPracownika;
-        public event Action WczytajPracownika;
+        int idex_of_selected_employee;
+        public event Action<List<string>> AddEmployees; 
+        public event Action<List<string>, int> EditEmployees; 
+        public event Action<string> SelectEmployee;
+        public event Action SaveEmployeesa;
+        public event Action LoadEmployees;
       
-        public Form1()
+        public Employees()
         {
             InitializeComponent();
         }
 
         //funkcja która ustawia list box, dostaje na wejsciu Liste stringow 
-        public void SetPracownikListBox(List<String> pracownik, int index = -1) {         
-            var gotowy_pracownik = "";
-            foreach (var item in pracownik)
+        public void SetEmployeeListBox(List<String> employee, int index = -1) {         
+            var ready_employee = "";
+            foreach (var item in employee)
             {
-                gotowy_pracownik += item + ", ";
+                ready_employee += item + ", ";
             }
 
             if (index != -1)
             {
                 listBox1.Items.RemoveAt(index);
                 
-                listBox1.Items.Insert(index, gotowy_pracownik);
+                listBox1.Items.Insert(index, ready_employee);
             }
             else {
-                listBox1.Items.Add(gotowy_pracownik);
+                listBox1.Items.Add(ready_employee);
             }
             
         }
 
         //funkcja do ustawiania tekst boxow po wybraniu ktorego z pracownikow w List boxie
-        public void SetPracownikTextBoxes(List<string> pracownik_list )
+        public void SetPracownikTextBoxes(List<string> employee_list)
         {        
-            textImie.Text = pracownik_list[0].Trim();
-            textNazwisko.Text = pracownik_list[1].Trim();
-            dateTimePicker.Text = pracownik_list[2].Trim();
-            numericSalary.Text = pracownik_list[3].Trim();
-            comboBoxStanowisko.Text = pracownik_list[4].Trim();
-            if (radioButton1.Text == pracownik_list[5].Trim())
+            textname.Text = employee_list[0].Trim();
+            textsurname.Text = employee_list[1].Trim();
+            dateTimePicker.Text = employee_list[2].Trim();
+            numericSalary.Text = employee_list[3].Trim();
+            comboBoxposition.Text = employee_list[4].Trim();
+            if (radioButton1.Text == employee_list[5].Trim())
                 radioButton1.Checked=true;
-            if (radioButton2.Text == pracownik_list[5].Trim())
+            if (radioButton2.Text == employee_list[5].Trim())
                 radioButton2.Checked = true;
-            if (radioButton3.Text == pracownik_list[5].Trim())
+            if (radioButton3.Text == employee_list[5].Trim())
                 radioButton3.Checked = true;
 
         }
@@ -67,25 +67,25 @@ namespace List.View
         // Jesli klikniemi ktorys element w listboxie
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e) {
             pracownik_edytowany = true;
-            idexwybranegopracownika = listBox1.SelectedIndex;
-            WybierzPracownika?.Invoke(listBox1.Text);
+            idex_of_selected_employee = listBox1.SelectedIndex;
+            SelectEmployee?.Invoke(listBox1.Text);
         }
         
         //przycisk tworzy liste stringow i przekazuja ja do presentera
         private void buttonDodaj_Click(object sender, EventArgs e) {
-            if (textImie.Text == string.Empty || textNazwisko.Text == string.Empty)
+            if (textname.Text == string.Empty || textsurname.Text == string.Empty)
             {
                 return;
             }
-            List<string> Pracownik_list = new List<string> { textImie.Text, textNazwisko.Text, dateTimePicker.Text, numericSalary.Text, comboBoxStanowisko.Text };            
+            List<string> Employee_list = new List<string> { textname.Text, textsurname.Text, dateTimePicker.Text, numericSalary.Text, comboBoxposition.Text };            
             if (radioButton1.Checked)
-                Pracownik_list.Add(radioButton1.Text);
+                Employee_list.Add(radioButton1.Text);
             if (radioButton2.Checked)
-                Pracownik_list.Add(radioButton2.Text);
+                Employee_list.Add(radioButton2.Text);
             if (radioButton3.Checked)
-                Pracownik_list.Add(radioButton3.Text);
+                Employee_list.Add(radioButton3.Text);
             if (pracownik_edytowany) {
-                EdytujPracownika?.Invoke(Pracownik_list, idexwybranegopracownika);
+                EditEmployees?.Invoke(Employee_list, idex_of_selected_employee);
                 pracownik_edytowany = false;
                 clearTextBoxes();
                 return;
@@ -93,45 +93,57 @@ namespace List.View
            
 
             clearTextBoxes();
-            DodajPracownika?.Invoke(Pracownik_list);
+            AddEmployees?.Invoke(Employee_list);
             
 
         }
 
 
-        internal void buttonZapisz_Click(object sender, EventArgs e) {
-            ZapiszPracownika?.Invoke();
+        public void buttonSave_Click(object sender, EventArgs e) {
+            SaveEmployeesa?.Invoke();
         } 
 
-        public void buttonWczytaj_Click(object sender, EventArgs e)
+        public void buttonLoad_Click(object sender, EventArgs e)
         {
-            WczytajPracownika?.Invoke();
+            listBox1.Items.Clear();
+            LoadEmployees?.Invoke();
+            
         }
 
-        internal void error()
+        public void error()
         {
-            errorProviderNazwisko.SetError(textNazwisko, "Nieprawidłowe dane ");
+            errorProvidersurname.SetError(textsurname, "Data not correct ");
         }
 
-                  
-        //    errorProviderImie.SetError(textImie, null);
-       
-       
 
-        //dodatkowe ustawienie roku, minimum to 18 lat od dzisiejszej daty, maksimum to 90 lat wstecz od dzisiaj
-        private void Form1_Load(object sender, EventArgs e)
+        //    errorProvidername.SetError(textname, null);
+
+
+
+        
+        public void Form1_Load(object sender, EventArgs e)
         {
             dateTimePicker.MaxDate = DateTime.Now.AddYears(-18);
             dateTimePicker.MinDate = DateTime.Now.AddYears(-90);
-           
+            comboBoxposition.Text = "Developer";
         }
-        private void clearTextBoxes() {
-            textImie.Clear();
-            textNazwisko.Clear();
+        public void clearTextBoxes() {
+            textname.Clear();
+            textsurname.Clear();
             numericSalary.Text = "1000";
             var data = DateTime.Now.AddYears(-19);
             dateTimePicker.Text = data.ToString();
 
+        }
+
+        
+
+        public void clearListBox() => listBox1.Items.Clear();
+
+        private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            listBox1.SelectedIndex = -1;
+        
         }
     }
 }

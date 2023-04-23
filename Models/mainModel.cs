@@ -10,61 +10,81 @@ using System.Windows.Forms;
 
 namespace List.Models
 {
-    // tutaj musza byc obiekty
-
-
-    internal class mainModel
+    public class mainModel
     {
-        List<Pracownik> listaObjPracownikow = new List<Pracownik>(); //lista obiektow pracowniko
+        List<Employees> ListObjectsEmployees = new List<Employees>(); //lista obiektow pracowniko
        
 
-        internal List<string> Dane_pracowika_list(int index = -1){ // jesli dostanie jakis parametr to zwroci tylko okreslony idex
+        public List<string> DataEmployeesInList(int index = -1){ // jesli dostanie jakis parametr to zwroci tylko okreslony idex
             if (index == -1) 
-                return listaObjPracownikow.Last().ListaStringow();
-            else return listaObjPracownikow[index].ListaStringow();
+                return ListObjectsEmployees.Last().StringList();
+            else return ListObjectsEmployees[index].StringList();
         }
 
-        internal bool _model_DodajPracownika(List<string> dane_pracownika, int index_pracownika_do_zmiany  = -1) // tutaj rowniez edytuje praconiwka
+        public bool _model_AddEmployees(List<string> data_employee, int index_employee_to_change  = -1) // tutaj rowniez edytuje pracownika
         {
-            var pracownik = new Pracownik(dane_pracownika);
-            Regex Imie_regex = new Regex("^[A-Z][a-z]\\p{L}{1,}$");
-            Regex Nazwisko_regex = new Regex("^[A-Z][a-ząęółśżźć]*(-[A-Z][a-ząęółśżźć]+)*$");
+            var pracownik = new Employees(data_employee);
+            Regex name_regex = new Regex("^[A-Z][a-z]\\p{L}{1,}$");
+            Regex surname_regex = new Regex("^[A-Z][a-ząęółśżźć]*(-[A-Z][a-ząęółśżźć]+)*$");
 
-            if (!Imie_regex.IsMatch(dane_pracownika[0])) {
+            if (!name_regex.IsMatch(data_employee[0])) {
                 return false;
             }
 
 
-            if (!Nazwisko_regex.IsMatch(dane_pracownika[1])) {
+            if (!surname_regex.IsMatch(data_employee[1])) {
                 return false;
             }
             
-            if (index_pracownika_do_zmiany == -1)
+            if (index_employee_to_change == -1)
             {
-                listaObjPracownikow.Add(pracownik);
+                ListObjectsEmployees.Add(pracownik);
             }
             else {
-                listaObjPracownikow[index_pracownika_do_zmiany] = pracownik;
+                
+                ListObjectsEmployees[index_employee_to_change] = pracownik;
             }            
              return true;
 
         }
 
-        public void _model_WczytajPracownika()  // wczytanie listy pracownikow z pliku
+        public List<List<string>> _model_LoadEmployees()  // wczytanie listy pracownikow z pliku
         {
-            Models.FileUsage plik = new Models.FileUsage();
-            plik.wczytaj();
+            List<List<string>> list_employees = new List<List<string>>();
+            //FileUsage plik = new FileUsage();
+            SavingToDB savingToDB = new SavingToDB();
+
+
+           // ListObjectsEmployees = plik.Load();
+
+
+            foreach (Employees obiekt in ListObjectsEmployees) {      
+
+                list_employees.Add(obiekt.StringList());
+            }
+            return list_employees;
+        }
+
+        public void _model_SaveEmployees()
+        {
+            FileUsage plik = new FileUsage();
+            plik.Save(ListObjectsEmployees);
+
+            SavingToDB savingToDB = new SavingToDB();
+            try
+            {
+            savingToDB.Save(ListObjectsEmployees);
+
+            }catch(Exception ex)
+            {
+
+                Console.WriteLine(ex.ToString());
+            }
+            
 
         }
 
 
-
-
-        internal void _model_ZapiszPracownik()
-        {
-            Models.FileUsage plik = new Models.FileUsage();
-            plik.zapisz(listaObjPracownikow);
-        }
 
     }
   
