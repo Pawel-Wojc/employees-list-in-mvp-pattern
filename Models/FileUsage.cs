@@ -7,7 +7,7 @@ namespace List.Models
     internal class FileUsage
     {
         
-        public void Save(List<Employees> listaObjPracownikow) {
+        public void Save(List<Employees> ListObjectsEmployees) {
 
             string path = "E:\\Studia\\Semestr 4\\Programowanie obiektowe i graficzne\\List\\List\\Baza\\Pracownicy.xml";
             
@@ -15,7 +15,7 @@ namespace List.Models
             using (FileStream stream = new FileStream(path, FileMode.Create))
             {
 
-                    serializer.Serialize(stream, listaObjPracownikow);
+                    serializer.Serialize(stream, ListObjectsEmployees);
                 
             }
 
@@ -25,16 +25,16 @@ namespace List.Models
         {
             string path = "E:\\Studia\\Semestr 4\\Programowanie obiektowe i graficzne\\List\\List\\Baza\\Pracownicy.xml";
 
-            List<Employees> listaObjPracownikow = new List<Employees>();
+            List<Employees> ListObjectsEmployees = new List<Employees>();
 
             XmlSerializer serializer = new XmlSerializer(typeof(List<Employees>));
 
             using (FileStream fileStream = new FileStream(path, FileMode.Open))
             {
-                listaObjPracownikow = (List<Employees>)serializer.Deserialize(fileStream);
+                ListObjectsEmployees = (List<Employees>)serializer.Deserialize(fileStream);
             }
 
-            return listaObjPracownikow;
+            return ListObjectsEmployees;
         }
     }
 }

@@ -53,7 +53,7 @@ namespace List.Models
             List<List<string>> list_employees = new List<List<string>>();
             //FileUsage plik = new FileUsage();
             SavingToDB savingToDB = new SavingToDB();
-
+            ListObjectsEmployees = savingToDB.Load();
 
            // ListObjectsEmployees = plik.Load();
 

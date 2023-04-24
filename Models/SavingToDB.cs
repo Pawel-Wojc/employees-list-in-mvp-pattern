@@ -13,22 +13,67 @@ namespace List.Models
 {
     internal class SavingToDB
     {
+        private string _connectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=employees;";
+        private string _query = "SELECT * FROM employees";
+        
         public SavingToDB()
         {
            
         }
 
 
-        public void Save(List<Employees> listaObjPracownikow)
+        public void Save(List<Employees> ListObjectsEmployees1)
         {
+            //need to check in tha DB is the record or not, if not add, else dont --done
+            List<Employees> ListObjectsEmployeesInDB = new List<Employees>();
+            ListObjectsEmployeesInDB = Load();
+
+            var ListObjectsEmployees = ListObjectsEmployees1.Except(ListObjectsEmployeesInDB);
+            MySqlConnection databaseConnection = new MySqlConnection(_connectionString);
+            MySqlDataReader reader;
+
+            string _query_save = "";
+            foreach (Employees obj in ListObjectsEmployees)
+            {
+
+                List<String> employee = new List<String>();
+                employee = obj.StringList();
+
+                _query_save = "INSERT INTO employees (Name, Surname, DateOfBirth, Salary, Position,ContractType) VALUES ('" + employee.ElementAt(0) + "',' " + employee.ElementAt(1) + "', '" + employee.ElementAt(2) + "', '" + employee.ElementAt(3) + "','" + employee.ElementAt(4) + "',' " + employee.ElementAt(5) + "')";
+
+            }
+            Console.WriteLine(_query_save);
+
+            try {
+                // Open the database
+                
+               
+                databaseConnection.Open();
+                MySqlCommand commandDatabase = new MySqlCommand(_query_save, databaseConnection);
+                reader = commandDatabase.ExecuteReader();
+
+            }catch(Exception ex)
+            {
+                // Show any error message.
+                MessageBox.Show(ex.Message);
+            }
+
+
+
+
+        }
+
+        public List<Employees> Load()
+        {
+
+            List<Employees> ListObjectsEmployees = new List<Employees>();
             
-            string connectionString = "datasource=127.0.0.1;port=3306;username=root;password=;database=employees;";
-      
-            string query = "SELECT * FROM employees";
+
+            
 
             // Prepare the connection
-            MySqlConnection databaseConnection = new MySqlConnection(connectionString);
-            MySqlCommand commandDatabase = new MySqlCommand(query, databaseConnection);
+            MySqlConnection databaseConnection = new MySqlConnection(_connectionString);
+            MySqlCommand commandDatabase = new MySqlCommand(_query, databaseConnection);
             commandDatabase.CommandTimeout = 60;
             MySqlDataReader reader;
 
@@ -40,25 +85,20 @@ namespace List.Models
                 // Execute the query
                 reader = commandDatabase.ExecuteReader();
 
-                // All succesfully executed, now do something
-
-                // IMPORTANT : 
-                // If your query returns result, use the following processor :
-
+                
                 if (reader.HasRows)
-                {
-                    string[] row = { };
+                {               
                     while (reader.Read())
                     {
-                        // As our database, the array will contain : ID 0, FIRST_NAME 1,LAST_NAME 2, ADDRESS 3
-                        // Do something with every received database ROW
-                        //row = { reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3) };
-                        row.Append(reader.GetString(0));
-                        Console.WriteLine(reader.GetString(0));
-                    }
-                    foreach (string d in row) { 
-                        Console.WriteLine(d);
-                    }
+                        List<string> data_employee = new List<string>();
+                        for (int i = 0; i < 6; i++) { 
+                            data_employee.Add(reader.GetString(i));
+                           
+                        }
+                        var employess = new Employees(data_employee);
+
+                        ListObjectsEmployees.Add(employess);
+                    }                
                 }
                 else
                 {
@@ -74,17 +114,7 @@ namespace List.Models
                 MessageBox.Show(ex.Message);
             }
 
-
-        }
-
-        public List<Employees> Load()
-        {
-            
-            List<Employees> listaObjPracownikow = new List<Employees>();
-
-            
-
-            return listaObjPracownikow;
+            return ListObjectsEmployees;
         }
 
     }
